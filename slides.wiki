@@ -1,121 +1,416 @@
-== Section 1 ==
+== @unittest@ and friends ==
 
 ==== Outline ====
 
 \tableofcontents[currentsection]
 
-==== slide 1 ====
+==== Testing with Python ====
 
-* bullet 1
-* bullet 2
-* bullet 3
+* @unittest@:
+** Has been part of the Python standard library since v. 2.1
+** Interface a bit awkward (camelCase methods...), very basic functionality until...
+** Major improvement with 2.7, now at the level of other modern testing tools
+** Backward compatible, unittest2 back-port for earlier versions of Python
+* alternatives:
+** @nosetests@
+** @py.test@
+** @doctest@
 
-==  Section 2 ==
+==== Test suites in Python: unittest ====
 
-==== Outline ====
+* Each test case is a subclass of @unittest.TestCase@
 
-\tableofcontents[currentsection]
+* Each test unit is a method of the class, whose name starts with @test@
 
-=== Subsection 1 ===
+* Each test unit checks '''one''' aspect of your code, and raises an exception if it does not work as expected
 
-==== Outline ====
+==== Anatomy of a TestCase ====
 
-\tableofcontents[currentsection,currentsubsection]
+\pyfile{code/test_something.py}
 
-==== Image Slide ====
+==== Multiple TestCases ====
 
-<[center]
-    <<<images/python-logo.png, scale=0.30>>>
-[center]>
+\pyfile{code/multiple.py}
 
-==== slide 2 ====
+==== @TestCase.assertSomething@ ====[containsverbatim]
 
-* bullet 1
-* bullet 2
-* bullet 3
+* @TestCase@ defines utility methods to check that some conditions are met, and raise an exception otherwise
+* Check that statement is true/false:
+** @assertTrue('Hi'.islower())@         _red_   ==> fail _
+** @assertFalse('Hi'.islower())@        _green_ ==> pass _
+* Check that two objects are equal:
+** @assertEqual(2+1, 3)@                _red_   ==> pass _
+** @assertEqual([2]+[1], [2, 1])@       _red_   ==> pass _
+** @assertNotEqual([2]+[1], [2, 1])@    _green_ ==> fail _
+* @assertEqual@ can be used to compare numbers, lists, tuples, dicts, sets, frozensets, and unicode objects
 
-=== Subsection 2 ===
+==== @TestCase.assertSomething@ ====[containsverbatim]
 
-==== Outline ====
+* Check that two numbers are equal up to a given precision:
+** @assertAlmostEqual(x, y, places=7)@
 
-\tableofcontents[currentsection,currentsubsection]
+* @places@ is the number of decimal places to use:
+** @assertAlmostEqual(1.121, 1.12, 2) @ _green_ => pass _
+** @assertAlmostEqual(1.121, 1.12, 3) @ _red_ => fail _
 
-==== Block ====
 
-<[block]{Block Title}
-Block contents
+<[block]{Formula for almost-equality is:}
+@round(x - y, places) == 0.@
+
+And so...
+
+
+@assertAlmostEqual(1.126, 1.12, 2)@ _red_ => fail _
 [block]>
 
-==== Special Symbols ====
+==== @TestCase.assertSomething@ ====[containsverbatim]
 
-* Tilde: \~{}
-* Tilde: \textasciitilde{}
-* Caret: \^{}
-* Hash: \#
-* Braces: \{\}
-* Dollar: \$
-* Double en: -{}-
-* At in Typewriter: {\tt stash@\{0\} }
-* Exclamation mark in alert: \alert{Attention!}
+* One can also specify a maximum difference:
+** @assertAlmostEqual(x, y, delta=0.)@
+* E.g.:
+** @assertAlmostEqual(1.125, 1.12, 0.06)@ _green_    => pass _
+** @assertAlmostEqual(1.125, 1.12, 0.04)@ _red_    => fail _
 
-or use: nowiki
-
-==== Correct Escapes  ====
-
-This only works with my patched version of wiki2beamer.
-
-* @HEAD \@ HEAD@
-* Attention\! Attention\!
-
-==== Verbatim ====[fragile]
-
-\begin{verbatim}
-
-wiki2beamer slides.wiki > slides.wiki.tex
-pdflatex slides.tex
-
-\end{verbatim}
-
-[frame]>
-
-==== Verbatim2 ====[containsverbatim]
-
-<[verbatim]
-
-wiki2beamer slides.wiki > slides.wiki.tex
-pdflatex slides.tex
-
-[verbatim]>
-
-==== Verbatim Block ====[containsverbatim]
-
-<[block]{Verbatim Block}
-<[verbatim]
-
-wiki2beamer slides.wiki > slides.wiki.tex
-pdflatex slides.tex
-
-[verbatim]>
-[block]>
-
-==== Code ====[containsverbatim]
+* Can be used to compare any object that supports subtraction and comparison:
 
 \begin{pycode}
-def python_func(arg):
-    print 'arg was: ', arg
+    import datetime
 
-python_func('Hello World!")
+    delta = datetime.timedelta(seconds=10)
+    second_timestamp = datetime.datetime.now()
+    self.assertAlmostEqual(first_timestamp,
+            second_timestamp, delta=delta)
 \end{pycode}
 
-==== Code from file ====
+==== @TestCase.assertSomething@ ====[containsverbatim]
 
-\pyfile{code.py}
+* Check that an exception is raised:
 
-==== Example ====
+\begin{pycode}
+    assertRaises(exception_class, function, args, kwargs)
+\end{pycode}
 
-<[example]
-    This is an example
+* executes:
+
+\begin{pycode}
+     function(args, kwargs)
+\end{pycode}
+
+* and passes if an exception of the appropriate class is raised
+
+* For example:
+** @assertRaises(IOError, file, 'inexistent', 'r')@ _green_ ==> pass _
+
+* Use the most specific exception class, or the test may pass because of collateral damage:
+** @tc.assertRaises(IOError, file, 1, 'r')@ _red_           ==> fail _
+** @tc.assertRaises(Exception, file, 1, 'r')@ _green_ ==> pass _
+
+==== @TestCase.assertSomething@ ====[containsverbatim]
+
+* The most convenient way to use assertRaises is as a context manager (@with@ statement):
+
+\begin{pycode}
+    with self.assertRaises(SomeException):
+         do_something()
+\end{pycode}
+
+* For example:
+
+\begin{pycode}
+    with self.assertRaises(ValueError):
+         int('XYZ')
+\end{pycode}
+
+* passes, because
+
+\begin{pycode}
+    int('XYZ')
+    ValueError: invalid literal for int() with base 10: 'XYZ'
+\end{pycode}
+
+==== @TestCase.assertSomething@ ====[containsverbatim]
+
+* Many more @assert@ methods: (\href{http://docs.python.org/library/unittest.html}{complete list})
+
+* @assertGreater(a, b) / assertLess(a, b)@
+* @assertRegexpMatches(text, regexp)@
+** verifies that regexp search matches text
+* @assertIn(value, sequence)@
+** assert membership in a container
+* @assertIsNone(value)@
+** verifies that value is None
+* @assertIsInstance(obj, cls)@
+** verifies that an object is an instance of a class
+* @assertItemsEqual(actual, expected)@
+** verifies equality of members, ignores order
+* @assertDictContainsSubset(subset, full)@
+** tests whether the entries in dictionary full are a superset of those in subset
+
+==== @TestCase.assertSomething@ ====[containsverbatim]
+
+* Most of the assert methods accept an optional @msg@ argument that overwrites the default one:
+\begin{pycode}
+    assertTrue('Hi'.islower(), 'One of the letters is not lowercase')
+\end{pycode}
+
+* Most of the assert methods have a negated equivalent, e.g.:
+** @assertIsNone@
+** @assertIsNotNone@
+
+==== Testing with numpy arrays ====[containsverbatim]
+
+* When testing numerical algorithms, numpy arrays have to be compared elementwise:
+
+\pyfile{code/test_numpy.py}
+
+because...
+
+==== Testing with numpy arrays ====[containsverbatim]
+
+<[nowiki]
+\begin{pyconcode}
+E
+======================================================================
+ERROR: test_equality (test_numpy.NumpyTestCase)
+----------------------------------------------------------------------
+Traceback (most recent call last):
+  File "/home/esc/git-working/python-cuso/testing/code/test_numpy.py",
+  line 9, in test_equality
+    self.assertEqual(a, b)
+  File "/usr/lib/python2.6/unittest.py", line 348, in failUnlessEqual
+    if not first == second:
+ValueError: The truth value of an array with more than one element is
+ambiguous. Use a.any() or a.all()
+
+----------------------------------------------------------------------
+Ran 1 test in 0.032s
+
+FAILED (errors=1)
+\end{pyconcode}
+[nowiki]>
+
+
+==== Testing with numpy arrays ====[containsverbatim]
+
+* @numpy.testing@ defines appropriate function:
+** @numpy.testing.assert\_array\_equal(x, y)@
+** @numpy.testing.assert\_array\_almost\_equal(x, y, decimal=6)@
+* If you need to check more complex conditions:
+** @numpy.all(x)@
+*** returns @True@ if all elements of @x@ are true
+** @numpy.any(x)@
+*** returns @True@ is any of the elements of @x@ is true
+** @numpy.allclose(x, y, rtol=1e-05, atol=1e-08)@
+*** returns @True@ if two arrays are element-wise equal within a tolerance; @rtol@ is relative difference, @atol@ is absolute difference
+** combine with @logical\_and@, @logical\_or@, @logical\_not@: 
+<[verbatim]
+    # test that all elements of x are between 0 and 1
+    assertTrue(all(logical_and(x > 0.0, x < 1.0))
+[verbatim]>
+
+==== How to run tests ====[containsverbatim]
+
+* Option 1: @unittest.main()@ will execute all tests in all @TestCase@ classes
+
+<[nowiki]
+\begin{pycode}
+if __name__ == '__main__':
+        unittest.main()
+\end{pycode}
+[nowiki]>
+
+* Option 2: Execute all tests in one file
+
+\begin{minted}{console}
+$ python -m unittest [-v] test_module
+\end{minted}
+
+* Option 3: Discover all tests in all subdirectories
+
+\begin{minted}{console}
+$ python -m unittest discover
+\end{minted}
+
+==== Option 4: use the @nosetests@ runner ====[containsverbatim]
+
+* Performs automatic discovery
+* Fully compatible with the @unittest@ package
+* Uses various heuristics to look for tests
+
+<[nowiki]
+\begin{minted}{console}
+$ nosetests
+................................
+----------------------------------------------------------------------
+Ran 32 tests in 4.876s
+
+OK
+\end{minted}
+[nowiki]>
+
+* In my experience: it does the right thing (TM)
+
+==== Option 4: use the @nosetests@ runner ====[containsverbatim]
+
+* Has a myriad of options
+** @-v, --verbose@: print the name of each test as it is run
+** @--pdb@: drop directly into the debugger on failure
+** @--processes=NUM@: split testing into multiple processes (automatic parallelization)
+
+* And a myriad of plugins
+** @--with-coverage@: run the tests with @coverage.py@ to measure test coverage
+** @--with-profile@: run the tests the hotshot profiler
+
+==== Option 4: use the @nosetests@ runner ====[containsverbatim]
+
+* ... And a very useful way to run single test classes and/or functions:
+
+<[nowiki]
+\begin{minted}{console}
+$ nosetests <FILE>:<FUNCTION>
+$ nosetests <FILE>:<CLASS>.<METHOD>
+\end{minted}
+
+\begin{minted}{console}
+$ nosetests test_file.py:test_function
+.
+----------------------------------------------------------------------
+Ran 1 test in 0.208s
+
+OK
+\end{minted}
+[nowiki]>
+
+== How and what to test ==
+
+==== Outline ====
+
+\tableofcontents[currentsection]
+
+==== Basics of testing ====
+
+* What to test, and how?
+* At the beginning, testing feels weird:
+*# It’s obvious that this code works (not TDD...)
+*# The tests are longer than the code
+*# The test code is a duplicate of the real code
+* What does a good test looks like?
+* What should I test?
+
+* Anything specific to scientific code?
+
+==== Basic structure of test ====
+
+* A good test is divided in three parts:
+** '''Given:''' Put your system in the right state for testing
+*** Create objects, initialize parameters, define constants...
+*** Define the expected result of the test
+** '''When:''' The key actions of the test
+*** Typically one or two lines of code
+** '''Then:''' Compare outcomes of the key actions with the expected ones
+*** Set of ''assertions'' regarding the new state of your system
+
+==== Test simple but general cases ====
+
+* Start with simple, general case
+* Take a realistic scenario for your code, try to reduce it to a simple example
+* Tests for @lower@ method of strings
+
+\pyfile{code/test_lower.py}
+
+==== Test special cases and boundary conditions ====[containsverbatim]
+
+* Code often breaks in corner cases: empty lists, None, NaN, 0.0, lists with repeated elements, non-existing file, ...
+* This often involves making design decision: respond to corner case with special behavior, or raise meaningful exception?
+
+<[nowiki]
+\begin{pycode}
+def test_empty_string(self):
+    # Given
+    string = ''
+    expected = ''
+    # When
+    output = string.lower()
+    # Then
+    self.assertEqual(output, expected)
+\end{pycode}
+[nowiki]>
+
+* Other good corner cases for string.lower():
+** do-nothing case: @string = 'hi'@
+** symbols: @string = '123 (!'@
+
+
+==== Common testing pattern ====
+
+* Often these cases are collected in a single test:
+
+\pyfile{code/better_test_lower.py}
+
+==== Fixtures ====
+
+* Tests require an initial state or test context in which they are executed (the “Given” part), which needs to be initialized and possibly cleaned up.
+* If multiple tests require the same context, this fixed context is known as a ''fixture''.
+* Examples of fixtures:
+** Creation of a data set at runtime
+** Loading data from a file or database
+** Creation of mock objects to simulate the interaction with complex objects
+
+==== @setUp@ and @tearDown@ ====
+
+\pyfile{code/fixture.py}
+
+==== Numerical fuzzing ====
+
+* Use deterministic test cases when possible
+* In most numerical algorithm, this will cover only over- simplified situations; in some, it is impossible
+* Fuzz testing, or '''fuzzing''': generate random input
+** Outside scientific programming it is mostly used to stress-test error handling, memory leaks, safety
+** For numerical algorithms, it is used to make sure one covers general, realistic cases
+** The input may be random, but you still need to know what to expect
+** Make failures reproducible by saving or printing the random seed
+
+==== Numerical fuzzing – example ====
+
+\pyfile{code/test_variance.py}
+
+==== Other common cases ====[containsverbatim]
+
+* Test general routines with specific ones
+* Example: test @polyomial\_expansion(data, degree)@ with @quadratic\_expansion(data)@
+* Test optimized routines with brute-force approaches
+
+
+<[example][test @z = outer(x, y)@ with:]
+\begin{pycode}
+M, N = x.shape[0], y.shape[0]
+z = numpy.zeros((M, N))
+for i in range(M):
+    for j in range(N):
+        z[i, j] = x[i] * y[j]
+\end{pycode}
 [example]>
+
+==== Example: eigenvector decomposition ====
+
+* Consider the function @values, vectors = eigen(matrix)@
+* Test with simple but general cases:
+** use full matrices for which you know the exact solution (from a table or computed by hand)
+* Test general routine with specific ones:
+** use the analytical solution for 2x2 matrices
+* Numerical fuzzing:
+** generate random eigenvalues, random eigenvector; construct the matrix; then check that the function returns the correct values
+* Test with corner cases:
+** test with diagonal matrix: is the algorithm stable?
+** test with a singular matrix: is the algorithm robust? Does it raise appropriate error when it fails?
+
+==== Summary ====
+
+* Testing is an essential part of modern software development
+* In Python all batteries are included and testing is easy
+* In fact, because it is a dynamic language testing is the only way to ensure correctness as your program evolves
+* Code that is easy to test is usually easy to modify
+* If you are already testing your code, give Test Driven Development a try
 
 ==== Conclusion ====
 
