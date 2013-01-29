@@ -169,6 +169,7 @@ because...
 
 <[nowiki]
 \begin{pyconcode}
+$ nosetest test_numpy.py
 E
 ======================================================================
 ERROR: test_equality (test_numpy.NumpyTestCase)
