@@ -36,7 +36,7 @@
 
 * @TestCase@ defines utility methods to check that some conditions are met, and raise an exception otherwise
 * Check that statement is true/false:
-** @assertTrue('Hi'.islower())@         _red_   ==> fail _
+** \mint{python}|assertTrue('Hi'.islower())|         _red_   ==> fail _
 ** @assertFalse('Hi'.islower())@        _green_ ==> pass _
 * Check that two objects are equal:
 ** @assertEqual(2+1, 3)@                _red_   ==> pass _
@@ -50,8 +50,8 @@
 ** @assertAlmostEqual(x, y, places=7)@
 
 * @places@ is the number of decimal places to use:
-** @assertAlmostEqual(1.121, 1.12, 2) @ _green_ => pass _
-** @assertAlmostEqual(1.121, 1.12, 3) @ _red_ => fail _
+** @assertAlmostEqual(1.121, 1.12, 2) @ _green_ ==> pass _
+** @assertAlmostEqual(1.121, 1.12, 3) @ _red_ ==> fail _
 
 
 <[block]{Formula for almost-equality is:}
@@ -60,7 +60,7 @@
 And so...
 
 
-@assertAlmostEqual(1.126, 1.12, 2)@ _red_ => fail _
+@assertAlmostEqual(1.126, 1.12, 2)@ _red_ ==> fail _
 [block]>
 
 ==== @TestCase.assertSomething@ ====[containsverbatim]
@@ -68,8 +68,8 @@ And so...
 * One can also specify a maximum difference:
 ** @assertAlmostEqual(x, y, delta=0.)@
 * E.g.:
-** @assertAlmostEqual(1.125, 1.12, 0.06)@ _green_    => pass _
-** @assertAlmostEqual(1.125, 1.12, 0.04)@ _red_    => fail _
+** @assertAlmostEqual(1.125, 1.12, 0.06)@ _green_    ==> pass _
+** @assertAlmostEqual(1.125, 1.12, 0.04)@ _red_    ==> fail _
 
 * Can be used to compare any object that supports subtraction and comparison:
 
