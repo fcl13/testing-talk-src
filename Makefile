@@ -1,5 +1,5 @@
 base = slides
-slidefilename = NAME
+slidefilename = haenel-python-testing-talk
 
 all: $(base).pdf
 
