@@ -73,28 +73,28 @@ And so...
 
 * Can be used to compare any object that supports subtraction and comparison:
 
-\begin{pycode}
-    import datetime
+<[pycode]
+import datetime
 
-    delta = datetime.timedelta(seconds=10)
-    second_timestamp = datetime.datetime.now()
-    self.assertAlmostEqual(first_timestamp,
-            second_timestamp, delta=delta)
-\end{pycode}
+delta = datetime.timedelta(seconds=10)
+second_timestamp = datetime.datetime.now()
+self.assertAlmostEqual(first_timestamp,
+        second_timestamp, delta=delta)
+[pycode]>
 
 ==== @TestCase.assertSomething@ ====[containsverbatim]
 
 * Check that an exception is raised:
 
-\begin{pycode}
-    assertRaises(exception_class, function, args, kwargs)
-\end{pycode}
+<[pycode]
+assertRaises(exception_class, function, args, kwargs)
+[pycode]>
 
 * executes:
 
-\begin{pycode}
-     function(args, kwargs)
-\end{pycode}
+<[pycode]
+function(args, kwargs)
+[pycode]>
 
 * and passes if an exception of the appropriate class is raised
 
@@ -109,24 +109,24 @@ And so...
 
 * The most convenient way to use assertRaises is as a context manager (@with@ statement):
 
-\begin{pycode}
-    with self.assertRaises(SomeException):
-         do_something()
-\end{pycode}
+<[pycode]
+with self.assertRaises(SomeException):
+        do_something()
+[pycode]>
 
 * For example:
 
-\begin{pycode}
-    with self.assertRaises(ValueError):
-         int('XYZ')
-\end{pycode}
+<[pycode]
+with self.assertRaises(ValueError):
+        int('XYZ')
+[pycode]>
 
 * passes, because
 
-\begin{pycode}
-    int('XYZ')
-    ValueError: invalid literal for int() with base 10: 'XYZ'
-\end{pycode}
+<[pycode]
+int('XYZ')
+ValueError: invalid literal for int() with base 10: 'XYZ'
+[pycode]>
 
 ==== @TestCase.assertSomething@ ====[containsverbatim]
 
@@ -149,9 +149,9 @@ And so...
 ==== @TestCase.assertSomething@ ====[containsverbatim]
 
 * Most of the assert methods accept an optional @msg@ argument that overwrites the default one:
-\begin{pycode}
+<[pycode]
     assertTrue('Hi'.islower(), 'One of the letters is not lowercase')
-\end{pycode}
+[pycode]>
 
 * Most of the assert methods have a negated equivalent, e.g.:
 ** @assertIsNone@
@@ -204,33 +204,33 @@ FAILED (errors=1)
 ** @numpy.allclose(x, y, rtol=1e-05, atol=1e-08)@
 *** returns @True@ if two arrays are element-wise equal within a tolerance; @rtol@ is relative difference, @atol@ is absolute difference
 ** combine with @logical\_and@, @logical\_or@, @logical\_not@: 
-<[verbatim]
+<[pycode]
     # test that all elements of x are between 0 and 1
     assertTrue(all(logical_and(x > 0.0, x < 1.0))
-[verbatim]>
+[pycode]>
 
 ==== How to run tests ====[containsverbatim]
 
 * Option 1: @unittest.main()@ will execute all tests in all @TestCase@ classes
 
+<[pycode]
 <[nowiki]
-\begin{pycode}
 if __name__ == '__main__':
         unittest.main()
-\end{pycode}
 [nowiki]>
+[pycode]>
 
 * Option 2: Execute all tests in one file
 
-\begin{minted}{console}
+<[consolecode]
 $ python -m unittest [-v] test_module
-\end{minted}
+[consolecode]>
 
 * Option 3: Discover all tests in all subdirectories
 
-\begin{minted}{console}
+<[consolecode]
 $ python -m unittest discover
-\end{minted}
+[consolecode]>
 
 ==== Option 4: use the @nosetests@ runner ====[containsverbatim]
 
@@ -238,16 +238,16 @@ $ python -m unittest discover
 * Fully compatible with the @unittest@ package
 * Uses various heuristics to look for tests
 
+<[consolecode]
 <[nowiki]
-\begin{minted}{console}
 $ nosetests
 ................................
 ----------------------------------------------------------------------
 Ran 32 tests in 4.876s
 
 OK
-\end{minted}
 [nowiki]>
+[consolecode]>
 
 * In my experience: it does the right thing (TM)
 
@@ -267,19 +267,19 @@ OK
 * ... And a very useful way to run single test classes and/or functions:
 
 <[nowiki]
-\begin{minted}{console}
+\begin{consolecode}
 $ nosetests <FILE>:<FUNCTION>
 $ nosetests <FILE>:<CLASS>.<METHOD>
-\end{minted}
+\end{consolecode}
 
-\begin{minted}{console}
+\begin{consolecode}
 $ nosetests test_file.py:test_function
 .
 ----------------------------------------------------------------------
 Ran 1 test in 0.208s
 
 OK
-\end{minted}
+\end{consolecode}
 [nowiki]>
 
 == How and what to test ==
@@ -324,8 +324,8 @@ OK
 * Code often breaks in corner cases: empty lists, None, NaN, 0.0, lists with repeated elements, non-existing file, ...
 * This often involves making design decision: respond to corner case with special behavior, or raise meaningful exception?
 
+<[pycode]
 <[nowiki]
-\begin{pycode}
 def test_empty_string(self):
     # Given
     string = ''
@@ -334,8 +334,8 @@ def test_empty_string(self):
     output = string.lower()
     # Then
     self.assertEqual(output, expected)
-\end{pycode}
 [nowiki]>
+[pycode]>
 
 * Other good corner cases for string.lower():
 ** do-nothing case: @string = 'hi'@
@@ -383,13 +383,13 @@ def test_empty_string(self):
 
 
 <[example][test @z = outer(x, y)@ with:]
-\begin{pycode}
+<[pycode]
 M, N = x.shape[0], y.shape[0]
 z = numpy.zeros((M, N))
 for i in range(M):
     for j in range(N):
         z[i, j] = x[i] * y[j]
-\end{pycode}
+[pycode]>
 [example]>
 
 ==== Example: eigenvector decomposition ====
