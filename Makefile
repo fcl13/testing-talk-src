@@ -1,5 +1,5 @@
 base = slides
-slidefilename = haenel-python-testing-talk
+slidefilename = haenel-testing-talk
 
 .PHONY: git-sha
 
