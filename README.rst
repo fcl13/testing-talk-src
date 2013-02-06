@@ -25,7 +25,7 @@ All Content is...
 * Licensed under the terms of `Attribution-ShareAlike 3.0 Unported  (CC BY-SA 3.0)  <http://creativecommons.org/licenses/by-sa/3.0/>`_
 * Strongly based on `previous materials by Pietro Berkes
   <https://python.g-node.org/python-summerschool-2012/software_carpentry>`_
-  which istself licenced under CC BY-SA 3.0
+  which itself licenced under CC BY-SA 3.0
 
 Included Dependencies
 ---------------------
