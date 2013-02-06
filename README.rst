@@ -21,7 +21,7 @@ Content
 
 All Content is...
 
-* Copyright 2013 Valentin Haenel <<valentin@haenel.co>>
+* Copyright 2013 Valentin Haenel <valentin@haenel.co>
 * Licensed under the terms of `Attribution-ShareAlike 3.0 Unported  (CC BY-SA 3.0)  <http://creativecommons.org/licenses/by-sa/3.0/>`_
 * Strongly based on `previous materials by Pietro Berkes
   <https://python.g-node.org/python-summerschool-2012/software_carpentry>`_
