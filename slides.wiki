@@ -157,15 +157,15 @@ ValueError: invalid literal for int() with base 10: 'XYZ'
 ** @assertIsNone@
 ** @assertIsNotNone@
 
-==== Testing with numpy arrays ====[containsverbatim]
+==== Testing with Numpy arrays ====[containsverbatim]
 
-* When testing numerical algorithms, numpy arrays have to be compared elementwise:
+* When testing numerical algorithms, Numpy arrays have to be compared elementwise:
 
 \pyfile{code/test_numpy.py}
 
 because...
 
-==== Testing with numpy arrays ====[containsverbatim]
+==== Testing with Numpy arrays ====[containsverbatim]
 
 <[nowiki]
 \begin{pyconcode}
@@ -191,7 +191,7 @@ FAILED (errors=1)
 [nowiki]>
 
 
-==== Testing with numpy arrays ====[containsverbatim]
+==== Testing with Numpy arrays ====[containsverbatim]
 
 * @numpy.testing@ defines appropriate function:
 ** @numpy.testing.assert\_array\_equal(x, y)@
