@@ -256,6 +256,23 @@ $ python -m unittest [-v] <test_module>
 $ python -m unittest discover
 [consolecode]>
 
+==== Running doctests ====[containsverbatim]
+
+* Option 1: use @doctest.testmod()@
+<[pycode]
+<[nowiki]
+if __name__ == "__main__":
+    import doctest
+    doctest.testmod()
+[nowiki]>
+[pycode]>
+
+* Option 2: Execute all tests in one file
+
+<[consolecode]
+$ python -m doctest <module>
+[consolecode]>
+
 ==== Using the @nosetests@ runner ====[containsverbatim]
 
 * Performs automatic discovery
