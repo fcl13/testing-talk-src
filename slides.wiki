@@ -247,7 +247,7 @@ if __name__ == '__main__':
 * Option 2: Execute all tests in one file
 
 <[consolecode]
-$ python -m unittest [-v] test_module
+$ python -m unittest [-v] <test_module>
 [consolecode]>
 
 * Option 3: Discover all tests in all subdirectories
