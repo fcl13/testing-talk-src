@@ -157,6 +157,8 @@ ValueError: invalid literal for int() with base 10: 'XYZ'
 ** @assertIsNone@
 ** @assertIsNotNone@
 
+
+
 ==== Testing with Numpy arrays ====[containsverbatim]
 
 * When testing numerical algorithms, Numpy arrays have to be compared elementwise:
@@ -216,8 +218,7 @@ FAILED (errors=1)
 
 \tableofcontents[currentsection]
 
-==== How to run tests ====[containsverbatim]
-
+==== How to run tests with @unittest@ ====[containsverbatim]
 
 * Option 1: @unittest.main()@ will execute all tests in all @TestCase@ classes
 
@@ -240,7 +241,7 @@ $ python -m unittest [-v] test_module
 $ python -m unittest discover
 [consolecode]>
 
-==== Option 4: use the @nosetests@ runner ====[containsverbatim]
+==== Using the @nosetests@ runner ====[containsverbatim]
 
 * Performs automatic discovery
 * Fully compatible with the @unittest@ package
@@ -259,7 +260,7 @@ OK
 
 * In my experience: it does the right thing (TM)
 
-==== Option 4: use the @nosetests@ runner ====[containsverbatim]
+==== Options for the @nosetests@ runner ====[containsverbatim]
 
 * Has a myriad of options
 ** @-v, --verbose@: print the name of each test as it is run
@@ -268,9 +269,9 @@ OK
 
 * And a myriad of plugins
 ** @--with-coverage@: run the tests with @coverage.py@ to measure test coverage
-** @--with-profile@: run the tests the hotshot profiler
+** @--with-doctest@: run any doctests too
 
-==== Option 4: use the @nosetests@ runner ====[containsverbatim]
+==== Running single tests with the @nosetests@ runner ====[containsverbatim]
 
 * ... And a very useful way to run single test classes and/or functions:
 
