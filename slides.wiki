@@ -209,7 +209,15 @@ FAILED (errors=1)
     assertTrue(all(logical_and(x > 0.0, x < 1.0))
 [pycode]>
 
+
+== How to run tests ==[containsverbatim]
+
+==== Outline ====
+
+\tableofcontents[currentsection]
+
 ==== How to run tests ====[containsverbatim]
+
 
 * Option 1: @unittest.main()@ will execute all tests in all @TestCase@ classes
 
