@@ -157,7 +157,22 @@ ValueError: invalid literal for int() with base 10: 'XYZ'
 ** @assertIsNone@
 ** @assertIsNotNone@
 
+==== Doctests ====[containsverbatim]
 
+* @doctest@ is a module that recognizes Python code in documentation and tests it
+** Can be in docstrings, rst or plain text documents
+** Serves as an example to the reader '''and''' as test code
+
+<[block]{Syntax}
+<[pyconcode]
+>>> CODE
+EXPECTED\_RESULT
+[pyconcode]>
+[block]>
+
+==== Doctest Example ====
+
+\pyfile{code/doctest_max.py}
 
 ==== Testing with Numpy arrays ====[containsverbatim]
 
