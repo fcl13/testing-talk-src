@@ -1,5 +1,5 @@
 base = slides
-slidefilename = haenel-testing-talk
+slidefilename = fall-course-2013-testing
 
 .PHONY: git-sha
 
